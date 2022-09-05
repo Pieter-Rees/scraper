@@ -4,12 +4,10 @@ const cheerio = require("cheerio");
 
 const app = express();
 
-const PORT = process.env.PORT || 3000;
-
-const website = "https://www.nu.nl/";
+const site = "https://www.nu.nl/";
 
 try {
-  axios(website).then(res => {
+  axios(site).then(res => {
     const data = res.data;
     const $ = cheerio.load(data);
 
@@ -17,11 +15,11 @@ try {
 
     $(".list__item--thumb", data).each(function () {
       const title = $(this).text();
-      const url = $(this).find("a").attr("href");
+      const anchor = $(this).find("a").attr("href");
 
       content.push({
         title,
-        url,
+        anchor,
       });
 
       app.get("/", (req, res) => {
@@ -33,6 +31,6 @@ try {
   console.log(error, error.message);
 }
 
-app.listen(PORT, () => {
-  console.log(`server is running on PORT:${PORT}`);
+app.listen(3000, () => {
+  console.log(`server is running on PORT:3000`);
 });
