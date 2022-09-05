@@ -1,6 +1,10 @@
 const express = require("express");
+const path = require("path");
+
 const axios = require("axios");
 const cheerio = require("cheerio");
+var http = require("http");
+var fs = require("fs");
 
 const app = express();
 
@@ -21,16 +25,13 @@ try {
         title,
         anchor,
       });
-
-      app.get("/", (req, res) => {
-        res.json(content);
-      });
     });
+    console.log(content);
   });
 } catch (error) {
   console.log(error, error.message);
 }
 
-app.listen(3000, () => {
+app.listen(3000, content => {
   console.log(`server is running on PORT:3000`);
 });
