@@ -1,0 +1,17 @@
+ul {
+  display: flex;
+  flex-flow: wrap;
+}
+
+li {
+  list-style: none;
+  width: 200px;
+  background: grey;
+  margin: 1em;
+  padding: 1em;
+  border-radius: 1em;
+}
+
+a {
+  word-wrap: break-word;
+}

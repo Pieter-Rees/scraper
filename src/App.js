@@ -1,38 +1,40 @@
 import React from "react";
-import worker_script from "./Worker.js";
 import "./App.css";
 
-class MyClass extends React.Component {
-  state = {};
+function App() {
+  const [data, setData] = React.useState([]);
 
-  constructor() {
-    super();
-    this.state = { clickCount: 1 };
-    this.handleClick = this.handleClick.bind(this);
-  }
+  const fetchData = () => {
+    fetch("/api")
+      .then(response => {
+        return response.json();
+      })
+      .then(data => {
+        setData(data);
+        console.log(data.message);
+      });
+  };
 
-  componentDidMount() {
-    this.worker = new Worker(worker_script);
-    this.worker.onmessage = ev => {
-      console.log("got data back from worker (4)");
-      console.log(ev);
-    };
+  React.useEffect(() => {
+    fetchData();
+  }, []);
 
-  }
-
-  handleClick() {
-    console.log("Posting message (1)");
-    this.worker.postMessage("Button clicked");
-  }
-
-  render() {
+  if (data.message) {
     return (
       <div>
-        myClass test
-        <button onClick={this.handleClick}>Click to trigger worker</button>
+        <ul>
+          {data.message.map(article => (
+            <li key={article.toString()}>
+              <h4>{article.title}</h4>
+              <a href={`https://www.nu.nl${article.anchor}`} rel="noreferrer" target="_blank">
+                https://nu.nl/{article.anchor}
+              </a>
+            </li>
+          ))}
+        </ul>
       </div>
     );
   }
 }
 
-export default MyClass;
+export default App;
