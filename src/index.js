@@ -1,16 +1,38 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+const express = require("express");
+const axios = require("axios");
+const cheerio = require("cheerio");
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+const app = express();
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+const PORT = process.env.PORT || 3000;
+
+const website = "https://www.nu.nl/";
+
+try {
+  axios(website).then(res => {
+    const data = res.data;
+    const $ = cheerio.load(data);
+
+    let content = [];
+
+    $(".list__item--thumb", data).each(function () {
+      const title = $(this).text();
+      const url = $(this).find("a").attr("href");
+
+      content.push({
+        title,
+        url,
+      });
+
+      app.get("/", (req, res) => {
+        res.json(content);
+      });
+    });
+  });
+} catch (error) {
+  console.log(error, error.message);
+}
+
+app.listen(PORT, () => {
+  console.log(`server is running on PORT:${PORT}`);
+});
