@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 
 function App() {
-  const [data, setData] = React.useState([]);
+  const [data, setData] = useState([]);
 
   const fetchData = () => {
     fetch("/api")
@@ -15,18 +15,21 @@ function App() {
       });
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetchData();
   }, []);
 
   if (data.message) {
     return (
       <div>
+        <div>
+          <button onClick={fetchData}>Refresh</button>
+        </div>
         <ul>
           {data.message.map(article => (
             <li key={article.toString()}>
               <h4>{article.title}</h4>
-              <a href={`https://www.nu.nl${article.anchor}`} rel="noreferrer" target="_blank">
+              <a href={`https://www.nu.nl${article.anchor}`} rel="noopener noreferrer" target="_blank">
                 https://nu.nl/{article.anchor}
               </a>
             </li>
